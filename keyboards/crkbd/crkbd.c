@@ -113,6 +113,7 @@ __attribute__((weak)) const keypos_t PROGMEM hand_swap_config[MATRIX_ROWS][MATRI
 //     oled_write(depad_str(last_keycode_str, ' '), false);
 //     oled_write_P(PSTR(":"), false);
 //     oled_write_char(key_name, false);
+//     oled_advance_page(true);
 // }
 
 // static void render_bootmagic_status(bool status) {
