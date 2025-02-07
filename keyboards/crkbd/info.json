@@ -133,6 +133,6 @@
         "max_brightness": 120
     },
     "rgblight": {
-        "max_brightness": 120
+        "max_brightness": 150
     }
 }

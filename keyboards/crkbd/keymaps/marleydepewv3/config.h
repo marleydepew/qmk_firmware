@@ -4,7 +4,7 @@
 #define MASTER_LEFT
 
 // Dynamic Tapping Term Settings
-#define TAPPING_TERM 230
+#define TAPPING_TERM 220
 #define DYNAMIC_TAPPING_TERM_INCREMENT 5
 
 // Leader Key Settings
@@ -13,7 +13,7 @@
 #define LEADER_NO_TIMEOUT
 
 // Dynamic Macro Settings
-#define DYNAMIC_MACRO_SIZE 64
+// #define DYNAMIC_MACRO_SIZE 64
 
 // Mouse Key Combined Mode (Accelerated + Constant) Settings
 #define MK_COMBINED
@@ -55,27 +55,12 @@
 
 // RGB Light Settings
 #ifdef RGBLIGHT_ENABLE
-    #define RGBLIGHT_EFFECT_BREATHING
-    #define RGBLIGHT_EFFECT_RAINBOW_MOOD
-    #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
-    #define RGBLIGHT_EFFECT_SNAKE
-    #define RGBLIGHT_EFFECT_KNIGHT
-    #define RGBLIGHT_EFFECT_CHRISTMAS
     #define RGBLIGHT_EFFECT_STATIC_GRADIENT
-    #define RGBLIGHT_EFFECT_RGB_TEST
-    #define RGBLIGHT_EFFECT_ALTERNATING
     #define RGBLIGHT_EFFECT_TWINKLE
-    #define RGBLIGHT_LIMIT_VAL 127
     #define RGBLIGHT_HUE_STEP 8
     #define RGBLIGHT_SAT_STEP 17
     #define RGBLIGHT_VAL_STEP 17
-    #define RGB_MATRIX_TIMEOUT 30000
 #endif
 
-// RGB Matrix Settings
-#ifdef RGB_MATRIX_ENABLE
-    #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
-    #define ENABLE_RGB_MATRIX_DIGITAL_RAIN
-    #define ENABLE_RGB_MATRIX_TYPING_HEATMAP
-    #define RGB_MATRIX_TIMEOUT 30000
-#endif
+// Create some space
+#undef NKRO_ENABLE
