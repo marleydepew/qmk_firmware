@@ -4,6 +4,7 @@
 #define MASTER_LEFT
 
 // Dynamic Tapping Term Settings
+#define PERMISSIVE_HOLD
 #define TAPPING_TERM 220
 #define DYNAMIC_TAPPING_TERM_INCREMENT 5
 
@@ -13,7 +14,7 @@
 #define LEADER_NO_TIMEOUT
 
 // Dynamic Macro Settings
-// #define DYNAMIC_MACRO_SIZE 64
+#define DYNAMIC_MACRO_SIZE 64
 
 // Mouse Key Combined Mode (Accelerated + Constant) Settings
 #define MK_COMBINED
@@ -55,7 +56,6 @@
 
 // RGB Light Settings
 #ifdef RGBLIGHT_ENABLE
-    #define RGBLIGHT_EFFECT_STATIC_GRADIENT
     #define RGBLIGHT_EFFECT_TWINKLE
     #define RGBLIGHT_HUE_STEP 8
     #define RGBLIGHT_SAT_STEP 17
