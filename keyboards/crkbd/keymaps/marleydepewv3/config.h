@@ -4,7 +4,7 @@
 #define MASTER_LEFT
 
 // Dynamic Tapping Term Settings
-#define PERMISSIVE_HOLD
+// #define PERMISSIVE_HOLD
 #define TAPPING_TERM 220
 #define DYNAMIC_TAPPING_TERM_INCREMENT 5
 
@@ -61,6 +61,13 @@
     #define RGBLIGHT_SAT_STEP 17
     #define RGBLIGHT_VAL_STEP 17
 #endif
+
+// RGB Light Settings
+    #define RGB_MATRIX_GRADIENT_UP_DOWN
+    #define RGB_MATRIX_STARLIGHT
+    #define RGBLIGHT_HUE_STEP 8
+    #define RGBLIGHT_SAT_STEP 17
+    #define RGBLIGHT_VAL_STEP 17
 
 // Create some space
 #undef NKRO_ENABLE
