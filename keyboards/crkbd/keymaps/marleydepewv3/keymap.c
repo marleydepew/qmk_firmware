@@ -29,9 +29,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // |-------------+-------------+-------------+-------------+-------------+-------------|   |-------------+-------------+-------------+-------------+-------------+-------------|
         MACRO_3,      KC_Q,         KC_W,         KC_F,         KC_P,         KC_B,             KC_J,         KC_L,         KC_U,         KC_Y,         XXXXXXX,      XXXXXXX,
     // |-------------+-------------+-------------+-------------+-------------+-------------|   |-------------+-------------+-------------+-------------+-------------+-------------|
-        KC_ESC,       LGUI_T(KC_A), LALT_T(KC_R), LSFT_T(KC_S), LCTL_T(KC_T), KC_G,             KC_M,         LCTL_T(KC_N), LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_O), KC_QUOT,
+        KC_CAPS,      LGUI_T(KC_A), LALT_T(KC_R), LSFT_T(KC_S), LCTL_T(KC_T), KC_G,             KC_M,         LCTL_T(KC_N), LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_O), KC_QUOT,
     // |-------------+-------------+-------------+-------------+-------------+-------------|   |-------------+-------------+-------------+-------------+-------------+-------------|
-        KC_CAPS,      KC_Z,         KC_X,         KC_C,         KC_D,         KC_V,             KC_K,         KC_H,         KC_COMM,      KC_DOT,       KC_SLSH,      QK_LEAD,
+        KC_ESC,       KC_Z,         KC_X,         KC_C,         KC_D,         KC_V,             KC_K,         KC_H,         KC_COMM,      KC_DOT,       KC_SLSH,      QK_LEAD,
     // |-------------+-------------+-------------+-------------+-------------+-------------|   |-------------+-------------+-------------+-------------+-------------+-------------|
                                                   LT(3,KC_TAB), LT(1,KC_BSPC),LT(2,KC_DEL),     LT(5,KC_ENT), LT(4,KC_SPC), LT(6,KC_PSCR) 
     //                                           |-------------+-------------+-------------|   |-------------+-------------+-------------|
@@ -99,7 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_RGB] = LAYOUT_split_3x6_3(                                           // RGB Layer
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
-        XXXXXXX,    DT_PRNT,    DT_UP,      DT_DOWN,    XXXXXXX,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        MACRO_5,    DT_PRNT,    DT_UP,      DT_DOWN,    XXXXXXX,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
         RM_TOGG,    RM_NEXT,    RM_HUEU,    RM_SATU,    RM_VALU,    RM_SPDU,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
@@ -181,7 +181,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case MACRO_2:
             if (record->event.pressed) {
                 // when keycode MACRO_2 is pressed
-                SEND_STRING(SS_RGUI("r") SS_DELAY(500) "chrome.exe" SS_TAP(X_ENT) SS_DELAY(2000) "https://amgensbx-rim-test.veevavault.com" SS_TAP(X_ENT));
+                SEND_STRING(SS_RGUI("r") SS_DELAY(500) "chrome.exe" SS_TAP(X_ENT) SS_DELAY(2000) "https://amgen-cdocs.veevavault.com" SS_TAP(X_ENT));
             } else {
                 // when keycode MACRO_2 is released
             }
@@ -208,12 +208,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING(
                     SS_RGUI("x") SS_DELAY(1000) "a" SS_DELAY(1000) 
                     // SS_TAP(X_LEFT) SS_DELAY(2000) SS_TAP(X_ENT) SS_DELAY(2000)
-                    "net stop TPHKLOAD" SS_TAP(X_ENT) SS_DELAY(1500)
-                    "net stop audiosrv" SS_TAP(X_ENT) SS_DELAY(1500)
-                    "net stop AudioEndpointBuilder" SS_TAP(X_ENT) SS_DELAY(1500)
-                    "net start AudioEndpointBuilder" SS_TAP(X_ENT) SS_DELAY(1500)
-                    "net start audiosrv" SS_TAP(X_ENT) SS_DELAY(1500)
-                    "net start TPHKLOAD" SS_TAP(X_ENT) SS_DELAY(1500)
+                    "net stop TPHKLOAD" SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net stop audiosrv" SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net stop AudioEndpointBuilder" SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net start AudioEndpointBuilder" SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net start audiosrv" SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net start TPHKLOAD" SS_TAP(X_ENT) SS_DELAY(2000)
                 );
             }
             break;
