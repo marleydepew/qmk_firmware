@@ -1,4 +1,4 @@
-DEFAULT_FOLDER = crkbd/rev1
+DEFAULT_FOLDER = crkbd/rev4_1/standard
 
 OLED_ENABLE = no # also defined in info.json
 RGBLIGHT_ENABLE = no # also defined in info.json
