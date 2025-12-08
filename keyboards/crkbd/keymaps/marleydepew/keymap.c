@@ -1,6 +1,5 @@
 #include QMK_KEYBOARD_H
 #include "../../macro.h"
-#include "../../oled.h"
 
 enum layer_names {
     _COLEMAK_DH,
@@ -16,20 +15,17 @@ enum custom_keycodes {
     MACRO_V = SAFE_RANGE,
     MACRO_A,
     MACRO_C,
-    MACRO_TM,
-    MACRO_TH,
-    MACRO_WM,
-    MACRO_WL,
     MACRO_1,
     MACRO_2,
     MACRO_3,
-    MACRO_4
+    MACRO_4,
+    MACRO_5
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAK_DH] = LAYOUT_split_3x6_3_ex2(                                                        // Colemak DH Layer
     // |-------------+-------------+-------------+-------------+-------------+-------------+-------------|   |-------------+-------------+-------------+-------------+-------------+-------------+-------------|
-        XXXXXXX,      KC_Q,         KC_W,         KC_F,         KC_P,         KC_B,         MACRO_1,          MACRO_3,      KC_J,         KC_L,         KC_U,         KC_Y,         XXXXXXX,      XXXXXXX,
+        MACRO_1,      KC_Q,         KC_W,         KC_F,         KC_P,         KC_B,         MACRO_1,          MACRO_3,      KC_J,         KC_L,         KC_U,         KC_Y,         XXXXXXX,      MACRO_2,
     // |-------------+-------------+-------------+-------------+-------------+-------------+-------------|   |-------------+-------------+-------------+-------------+-------------+-------------+-------------|
         KC_CAPS,      LGUI_T(KC_A), LALT_T(KC_R), LSFT_T(KC_S), LCTL_T(KC_T), KC_G,         MACRO_2,          MACRO_4,      KC_M,         LCTL_T(KC_N), LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_O), KC_QUOT,
     // |-------------+-------------+-------------+-------------+-------------+-------------+-------------|   |-------------+-------------+-------------+-------------+-------------+-------------+-------------|
@@ -77,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_NAVIGATION] = LAYOUT_split_3x6_3_ex2(                                  // Navigation Layer (with macros)
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------+-----------|
-        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    DM_REC1,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        MACRO_4,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    DM_REC1,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------+-----------|
         XXXXXXX,    KC_LEFT,    KC_UP,      KC_DOWN,    KC_RGHT,    XXXXXXX,    DM_PLY1,        XXXXXXX,    XXXXXXX,    KC_RCTL,    KC_RSFT,    KC_RALT,    KC_RGUI,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
@@ -89,23 +85,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_MOUSE] = LAYOUT_split_3x6_3_ex2(                                                // Mouse Layer
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------+-----------|
-        MACRO_V,    KC_WH_L,    KC_WH_U,    KC_WH_D,    KC_WH_R,    XXXXXXX,    DM_REC2,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        MACRO_V,    MS_WHLL,    MS_WHLU,    MS_WHLD,    MS_WHLR,    XXXXXXX,    DM_REC2,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------+-----------|
-        MACRO_A,    KC_MS_L,    KC_MS_U,    KC_MS_D,    KC_MS_R,    LSFT(KC_F3),DM_PLY2,        XXXXXXX,    XXXXXXX,    KC_RCTL,    KC_RSFT,    KC_RALT,    KC_RGUI,    XXXXXXX,
+        MACRO_A,    MS_LEFT,    MS_UP,      MS_DOWN,    MS_RGHT,    LSFT(KC_F3),DM_PLY2,        XXXXXXX,    XXXXXXX,    KC_RCTL,    KC_RSFT,    KC_RALT,    KC_RGUI,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------+-----------|
-        MACRO_C,    XXXXXXX,    XXXXXXX,    KC_BTN1,    KC_BTN2,    KC_BTN3,                                KC_BTN3,    KC_BTN1,    KC_BTN2,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        MACRO_C,    XXXXXXX,    XXXXXXX,    MS_BTN1,    MS_BTN2,    MS_BTN3,                                MS_BTN3,    MS_BTN1,    MS_BTN2,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|                           |-----------+-----------+-----------+-----------+-----------+-----------|
-                                            KC_ACL0,    KC_ACL1,    KC_ACL2,                                XXXXXXX,    XXXXXXX,    XXXXXXX
+                                            MS_ACL0,    MS_ACL1,    MS_ACL2,                                XXXXXXX,    XXXXXXX,    XXXXXXX
     //                                     |-----------+-----------+-----------|                           |-----------+-----------+-----------|
   ),
 
     [_RGB] = LAYOUT_split_3x6_3(                                           // RGB Layer
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
-        XXXXXXX,    DT_PRNT,    DT_UP,      DT_DOWN,    XXXXXXX,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        MACRO_5,    DT_PRNT,    DT_UP,      DT_DOWN,    XXXXXXX,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
-        RGB_TOG,    RGB_MOD,    RGB_HUI,    RGB_SAI,    RGB_VAI,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        RM_TOGG,    RM_NEXT,    RM_HUEU,    RM_SATU,    RM_VALU,    RM_SPDU,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
-        RGB_M_P,    RGB_RMOD,   RGB_HUD,    RGB_SAD,    RGB_VAD,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        RGB_M_G,    RM_PREV,    RM_HUED,    RM_SATD,    RM_VALD,    RM_SPDD,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
                                             XXXXXXX,    XXXXXXX,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX
     //                                     |-----------+-----------+-----------|   |-----------+-----------+-----------|
@@ -174,7 +170,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case MACRO_1:
             if (record->event.pressed) {
                 // when keycode MACRO_1 is pressed
-                SEND_STRING(SS_RGUI("r") SS_DELAY(500) "cmd.exe" SS_TAP(X_ENT) SS_DELAY(1000) "python.exe" SS_TAP(X_ENT));
+                SEND_STRING(SS_RGUI("r") SS_DELAY(500) "cmd.exe" SS_TAP(X_ENT));
             } else {
                 // when keycode MACRO_1 is released
             }
@@ -183,7 +179,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case MACRO_2:
             if (record->event.pressed) {
                 // when keycode MACRO_2 is pressed
-                SEND_STRING(SS_RGUI("r") SS_DELAY(500) "chrome.exe" SS_TAP(X_ENT) SS_DELAY(2000) "https://amgensbx-rim-test.veevavault.com" SS_TAP(X_ENT));
+                SEND_STRING(SS_RGUI("r") SS_DELAY(500) "calc.exe" SS_TAP(X_ENT));
             } else {
                 // when keycode MACRO_2 is released
             }
@@ -191,7 +187,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case MACRO_3:
             if (record->event.pressed) {
-                // when keycode MACRO_3 is pressed
+                SEND_STRING(SS_RGUI("r") SS_DELAY(500) "cmd.exe" SS_TAP(X_ENT) SS_DELAY(1000) "python.exe" SS_TAP(X_ENT));
             } else {
                 // when keycode MACRO_3 is released
             }
@@ -199,45 +195,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case MACRO_4:
             if (record->event.pressed) {
-                // when keycode MACRO_4 is pressed
+                SEND_STRING(SS_RGUI("r") SS_DELAY(500) "cmd.exe" SS_TAP(X_ENT) SS_DELAY(1000) "jupyter notebook" SS_TAP(X_ENT));
             } else {
                 // when keycode MACRO_4 is released
             }
             break;
 
-        case MACRO_TM:
+        case MACRO_5:
             if (record->event.pressed) {
-                // when keycode MS Teams Mute is pressed
-                SEND_STRING(SS_DOWN(X_LCTL) SS_DOWN(X_LSFT) "m" SS_UP(X_LSFT) SS_UP(X_LCTL));
-            } else {
-                // when keycode MACRO_1 is released
-            }
-            break;
-
-        case MACRO_TH:
-            if (record->event.pressed) {
-                // when keycode MS Teams Hangup is pressed
-                SEND_STRING(SS_DOWN(X_LCTL) SS_DOWN(X_LSFT) "h" SS_UP(X_LSFT) SS_UP(X_LCTL));
-            } else {
-                // when keycode MACRO_2 is released
-            }
-            break;
-
-        case MACRO_WM:
-            if (record->event.pressed) {
-                // when keycode WebEx Mute is pressed
-                SEND_STRING(SS_LCTL("m"));
-            } else {
-                // when keycode MACRO_1 is released
-            }
-            break;
-
-        case MACRO_WL:
-            if (record->event.pressed) {
-                // when keycode WebEx Leave is pressed
-                SEND_STRING(SS_LCTL("l"));
-            } else {
-                // when keycode MACRO_2 is released
+                SEND_STRING(
+                    SS_RGUI("x") SS_DELAY(1000) "a" SS_DELAY(1000) 
+                    // SS_TAP(X_LEFT) SS_DELAY(2000) SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net stop TPHKLOAD" SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net stop audiosrv" SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net stop AudioEndpointBuilder" SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net start AudioEndpointBuilder" SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net start audiosrv" SS_TAP(X_ENT) SS_DELAY(2000)
+                    "net start TPHKLOAD" SS_TAP(X_ENT) SS_DELAY(2000)
+                );
             }
             break;
 

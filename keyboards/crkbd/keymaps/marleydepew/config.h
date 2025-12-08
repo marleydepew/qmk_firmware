@@ -4,7 +4,7 @@
 #define MASTER_LEFT
 
 // Dynamic Tapping Term Settings
-#define TAPPING_TERM 230
+#define TAPPING_TERM 220
 #define DYNAMIC_TAPPING_TERM_INCREMENT 5
 
 // Leader Key Settings
@@ -74,8 +74,23 @@
 
 // RGB Matrix Settings
 #ifdef RGB_MATRIX_ENABLE
+
+    #define ENABLE_RGB_MATRIX_ALPHAS_MODS         // Static dual hue, speed is hue for secondary hue
+    #define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN    // Static gradient top to bottom, speed controls how much gradient changes
+    #define ENABLE_RGB_MATRIX_RAINDROPS           // Randomly changes a single key's hue
+    #define ENABLE_RGB_MATRIX_JELLYBEAN_RAINDROPS // Randomly changes a single key's hue and saturation
+    #define ENABLE_RGB_MATRIX_PIXEL_FRACTAL       // Single hue fractal filled keys pulsing horizontally out to edges
+    #define ENABLE_RGB_MATRIX_PIXEL_FLOW          // Pulsing RGB flow along LED wiring with random hues
+    #define ENABLE_RGB_MATRIX_PIXEL_RAIN          // Randomly light keys with random hues
+    #define ENABLE_RGB_MATRIX_STARLIGHT           // LEDs turn on and off at random at varying brightness, maintaining user set color
+    #define ENABLE_RGB_MATRIX_STARLIGHT_SMOOTH    // LEDs slowly increase and decrease in brightness randomly
+    #define ENABLE_RGB_MATRIX_STARLIGHT_DUAL_HUE  // LEDs turn on and off at random at varying brightness, modifies user set hue by +- 30
+    #define ENABLE_RGB_MATRIX_STARLIGHT_DUAL_SAT  // LEDs turn on and off at random at varying brightness, modifies user set saturation by +- 30
+    #define ENABLE_RGB_MATRIX_RIVERFLOW           // Modification to breathing animation, offset's animation depending on key location to simulate a river flowing
+
     #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
     #define ENABLE_RGB_MATRIX_DIGITAL_RAIN
     #define ENABLE_RGB_MATRIX_TYPING_HEATMAP
-    #define RGB_MATRIX_TIMEOUT 30000
+    #define RGB_MATRIX_TIMEOUT 300000
+
 #endif
