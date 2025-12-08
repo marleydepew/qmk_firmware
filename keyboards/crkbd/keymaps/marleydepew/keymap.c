@@ -85,13 +85,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_MOUSE] = LAYOUT_split_3x6_3_ex2(                                                // Mouse Layer
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------+-----------|
-        MACRO_V,    KC_WH_L,    KC_WH_U,    KC_WH_D,    KC_WH_R,    XXXXXXX,    DM_REC2,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        MACRO_V,    MS_WHLL,    MS_WHLU,    MS_WHLD,    MS_WHLR,    XXXXXXX,    DM_REC2,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------+-----------|
-        MACRO_A,    KC_MS_L,    KC_MS_U,    KC_MS_D,    KC_MS_R,    LSFT(KC_F3),DM_PLY2,        XXXXXXX,    XXXXXXX,    KC_RCTL,    KC_RSFT,    KC_RALT,    KC_RGUI,    XXXXXXX,
+        MACRO_A,    MS_LEFT,    MS_UP,      MS_DOWN,    MS_RGHT,    LSFT(KC_F3),DM_PLY2,        XXXXXXX,    XXXXXXX,    KC_RCTL,    KC_RSFT,    KC_RALT,    KC_RGUI,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------+-----------|
-        MACRO_C,    XXXXXXX,    XXXXXXX,    KC_BTN1,    KC_BTN2,    KC_BTN3,                                KC_BTN3,    KC_BTN1,    KC_BTN2,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        MACRO_C,    XXXXXXX,    XXXXXXX,    MS_BTN1,    MS_BTN2,    MS_BTN3,                                MS_BTN3,    MS_BTN1,    MS_BTN2,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|                           |-----------+-----------+-----------+-----------+-----------+-----------|
-                                            KC_ACL0,    KC_ACL1,    KC_ACL2,                                XXXXXXX,    XXXXXXX,    XXXXXXX
+                                            MS_ACL0,    MS_ACL1,    MS_ACL2,                                XXXXXXX,    XXXXXXX,    XXXXXXX
     //                                     |-----------+-----------+-----------|                           |-----------+-----------+-----------|
   ),
 
@@ -99,9 +99,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
         MACRO_5,    DT_PRNT,    DT_UP,      DT_DOWN,    XXXXXXX,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
-        RGB_TOG,    RGB_MOD,    RGB_HUI,    RGB_SAI,    RGB_VAI,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        RM_TOGG,    RM_NEXT,    RM_HUEU,    RM_SATU,    RM_VALU,    RM_SPDU,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
-        RGB_M_G,    RGB_RMOD,   RGB_HUD,    RGB_SAD,    RGB_VAD,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        RGB_M_G,    RM_PREV,    RM_HUED,    RM_SATD,    RM_VALD,    RM_SPDD,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
                                             XXXXXXX,    XXXXXXX,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX
     //                                     |-----------+-----------+-----------|   |-----------+-----------+-----------|
