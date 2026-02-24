@@ -20,19 +20,19 @@ enum custom_keycodes {
     MACRO_3,
     MACRO_4,
     MACRO_5,
+    MS_WHLD_SLOWEST,
     MS_WHLD_SLOW,
-    MS_WHLD_FASTER,
-    MS_WHLD_FASTEST,
+    MS_WHLD_FAST,
+    MS_WHLU_SLOWEST,
     MS_WHLU_SLOW,
-    MS_WHLU_FASTER,
-    MS_WHLU_FASTEST    
+    MS_WHLU_FAST    
 };
 
 enum mouse_wheel_acceleration {
     DEFAULT = 10,
-    SLOW = 0,
-    FASTER = 1,
-    FASTEST = 2
+    SLOWEST = 0,
+    SLOW = 1,
+    FAST = 2
 };
 
 uint8_t mouse_wheel_acceleration_mode = DEFAULT;
@@ -225,25 +225,52 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
 
         // For the Rotary Encoder
-        // Mouse Wheel Down Slow Speed
+        // Mouse Wheel Down SLOWEST Speed
+       case MS_WHLD_SLOWEST:
+            if (record->event.pressed) {
+                switch (mouse_wheel_acceleration_mode) {
+                    case SLOWEST:
+                        break;
+                    case SLOW:
+                        mouse_wheel_acceleration_mode = SLOWEST;
+                        unregister_code16(QK_MOUSE_ACCELERATION_1);
+                        register_code16(QK_MOUSE_ACCELERATION_0);
+                        break;
+                    case FAST:
+                        mouse_wheel_acceleration_mode = SLOWEST;
+                        unregister_code16(QK_MOUSE_ACCELERATION_2);
+                        register_code16(QK_MOUSE_ACCELERATION_0);
+                        break;
+                    case DEFAULT:
+                        mouse_wheel_acceleration_mode = SLOWEST;
+                        register_code16(QK_MOUSE_ACCELERATION_0);
+                        break;
+                }
+                mouse_wheel_acceleration_timer = timer_read32();
+                tap_code16(MS_WHLD);
+            }
+            break;
+
+        // For the Rotary Encoder
+        // Mouse Wheel Down SLOW Speed
        case MS_WHLD_SLOW:
             if (record->event.pressed) {
                 switch (mouse_wheel_acceleration_mode) {
+                    case SLOWEST:
+                        mouse_wheel_acceleration_mode = SLOW;
+                        unregister_code16(QK_MOUSE_ACCELERATION_0);
+                        register_code16(QK_MOUSE_ACCELERATION_1);
+                        break;
                     case SLOW:
                         break;
-                    case FASTER:
+                    case FAST:
                         mouse_wheel_acceleration_mode = SLOW;
-                        unregister_code16(MS_ACL1);
-                        register_code16(MS_ACL0);
-                        break;
-                    case FASTEST:
-                        mouse_wheel_acceleration_mode = SLOW;
-                        unregister_code16(MS_ACL2);
-                        register_code16(MS_ACL0);
+                        unregister_code16(QK_MOUSE_ACCELERATION_2);
+                        register_code16(QK_MOUSE_ACCELERATION_1);
                         break;
                     case DEFAULT:
                         mouse_wheel_acceleration_mode = SLOW;
-                        register_code16(MS_ACL0);
+                        register_code16(QK_MOUSE_ACCELERATION_1);
                         break;
                 }
                 mouse_wheel_acceleration_timer = timer_read32();
@@ -252,25 +279,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
 
         // For the Rotary Encoder
-        // Mouse Wheel Down Faster Speed
-       case MS_WHLD_FASTER:
+        // Mouse Wheel Down FAST Speed
+        case MS_WHLD_FAST:
             if (record->event.pressed) {
                 switch (mouse_wheel_acceleration_mode) {
+                    case SLOWEST:
+                        mouse_wheel_acceleration_mode = FAST;
+                        unregister_code16(QK_MOUSE_ACCELERATION_0);
+                        register_code16(QK_MOUSE_ACCELERATION_2);
+                        break;
                     case SLOW:
-                        mouse_wheel_acceleration_mode = FASTER;
-                        unregister_code16(MS_ACL0);
-                        register_code16(MS_ACL1);
+                        mouse_wheel_acceleration_mode = FAST;
+                        unregister_code16(QK_MOUSE_ACCELERATION_1);
+                        register_code16(QK_MOUSE_ACCELERATION_2);
                         break;
-                    case FASTER:
-                        break;
-                    case FASTEST:
-                        mouse_wheel_acceleration_mode = FASTER;
-                        unregister_code16(MS_ACL2);
-                        register_code16(MS_ACL1);
+                    case FAST:
                         break;
                     case DEFAULT:
-                        mouse_wheel_acceleration_mode = FASTER;
-                        register_code16(MS_ACL1);
+                        mouse_wheel_acceleration_mode = FAST;
+                        register_code16(QK_MOUSE_ACCELERATION_2);
                         break;
                 }
                 mouse_wheel_acceleration_timer = timer_read32();
@@ -279,52 +306,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
 
         // For the Rotary Encoder
-        // Mouse Wheel Down Fastest Speed
-        case MS_WHLD_FASTEST:
+        // Mouse Wheel Up SLOWEST Speed
+        case MS_WHLU_SLOWEST:
             if (record->event.pressed) {
                 switch (mouse_wheel_acceleration_mode) {
+                    case SLOWEST:
+                        break;
                     case SLOW:
-                        mouse_wheel_acceleration_mode = FASTEST;
-                        unregister_code16(MS_ACL0);
-                        register_code16(MS_ACL2);
+                        mouse_wheel_acceleration_mode = SLOWEST;
+                        unregister_code16(QK_MOUSE_ACCELERATION_1);
+                        register_code16(QK_MOUSE_ACCELERATION_0);
                         break;
-                    case FASTER:
-                        mouse_wheel_acceleration_mode = FASTEST;
-                        unregister_code16(MS_ACL1);
-                        register_code16(MS_ACL2);
-                        break;
-                    case FASTEST:
+                    case FAST:
+                        mouse_wheel_acceleration_mode = SLOWEST;
+                        unregister_code16(QK_MOUSE_ACCELERATION_2);
+                        register_code16(QK_MOUSE_ACCELERATION_0);
                         break;
                     case DEFAULT:
-                        mouse_wheel_acceleration_mode = FASTEST;
-                        register_code16(MS_ACL2);
-                        break;
-                }
-                mouse_wheel_acceleration_timer = timer_read32();
-                tap_code16(MS_WHLD);
-            }
-            break;
-
-        // For the Rotary Encoder
-        // Mouse Wheel Up Slow Speed
-        case MS_WHLU_SLOW:
-            if (record->event.pressed) {
-                switch (mouse_wheel_acceleration_mode) {
-                    case SLOW:
-                        break;
-                    case FASTER:
-                        mouse_wheel_acceleration_mode = SLOW;
-                        unregister_code16(MS_ACL1);
-                        register_code16(MS_ACL0);
-                        break;
-                    case FASTEST:
-                        mouse_wheel_acceleration_mode = SLOW;
-                        unregister_code16(MS_ACL2);
-                        register_code16(MS_ACL0);
-                        break;
-                    case DEFAULT:
-                        mouse_wheel_acceleration_mode = SLOW;
-                        register_code16(MS_ACL0);
+                        mouse_wheel_acceleration_mode = SLOWEST;
+                        register_code16(QK_MOUSE_ACCELERATION_0);
                         break;
                 }
                 mouse_wheel_acceleration_timer = timer_read32();
@@ -333,25 +333,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
 
         // For the Rotary Encoder
-        // Mouse Wheel Up Faster Speed
-       case MS_WHLU_FASTER:
+        // Mouse Wheel Up SLOW Speed
+       case MS_WHLU_SLOW:
             if (record->event.pressed) {
                 switch (mouse_wheel_acceleration_mode) {
+                    case SLOWEST:
+                        mouse_wheel_acceleration_mode = SLOW;
+                        unregister_code16(QK_MOUSE_ACCELERATION_0);
+                        register_code16(QK_MOUSE_ACCELERATION_1);
+                        break;
                     case SLOW:
-                        mouse_wheel_acceleration_mode = FASTER;
-                        unregister_code16(MS_ACL0);
-                        register_code16(MS_ACL1);
                         break;
-                    case FASTER:
-                        break;
-                    case FASTEST:
-                        mouse_wheel_acceleration_mode = FASTER;
-                        unregister_code16(MS_ACL2);
-                        register_code16(MS_ACL1);
+                    case FAST:
+                        mouse_wheel_acceleration_mode = SLOW;
+                        unregister_code16(QK_MOUSE_ACCELERATION_2);
+                        register_code16(QK_MOUSE_ACCELERATION_1);
                         break;
                     case DEFAULT:
-                        mouse_wheel_acceleration_mode = FASTER;
-                        register_code16(MS_ACL1);
+                        mouse_wheel_acceleration_mode = SLOW;
+                        register_code16(QK_MOUSE_ACCELERATION_1);
                         break;
                 }
                 mouse_wheel_acceleration_timer = timer_read32();
@@ -360,25 +360,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
 
         // For the Rotary Encoder
-        // Mouse Wheel Up Fastest Speed
-        case MS_WHLU_FASTEST:
+        // Mouse Wheel Up FAST Speed
+        case MS_WHLU_FAST:
             if (record->event.pressed) {
                 switch (mouse_wheel_acceleration_mode) {
+                    case SLOWEST:
+                        mouse_wheel_acceleration_mode = FAST;
+                        unregister_code16(QK_MOUSE_ACCELERATION_0);
+                        register_code16(QK_MOUSE_ACCELERATION_2);
+                        break;
                     case SLOW:
-                        mouse_wheel_acceleration_mode = FASTEST;
-                        unregister_code16(MS_ACL0);
-                        register_code16(MS_ACL2);
+                        mouse_wheel_acceleration_mode = FAST;
+                        unregister_code16(QK_MOUSE_ACCELERATION_1);
+                        register_code16(QK_MOUSE_ACCELERATION_2);
                         break;
-                    case FASTER:
-                        mouse_wheel_acceleration_mode = FASTEST;
-                        unregister_code16(MS_ACL1);
-                        register_code16(MS_ACL2);
-                        break;
-                    case FASTEST:
+                    case FAST:
                         break;
                     case DEFAULT:
-                        mouse_wheel_acceleration_mode = FASTEST;
-                        register_code16(MS_ACL2);
+                        mouse_wheel_acceleration_mode = FAST;
+                        register_code16(QK_MOUSE_ACCELERATION_2);
                         break;
                 }
                 mouse_wheel_acceleration_timer = timer_read32();
@@ -394,21 +394,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // This gets called constantly
 void matrix_scan_user(void) { 
     switch (mouse_wheel_acceleration_mode) {
+        case SLOWEST:
+            if (timer_elapsed32(mouse_wheel_acceleration_timer) > 5000) {
+                unregister_code16(QK_MOUSE_ACCELERATION_0);
+                mouse_wheel_acceleration_mode = DEFAULT;
+            }
+            break;
         case SLOW:
             if (timer_elapsed32(mouse_wheel_acceleration_timer) > 5000) {
-                unregister_code16(MS_ACL0);
+                unregister_code16(QK_MOUSE_ACCELERATION_1);
                 mouse_wheel_acceleration_mode = DEFAULT;
             }
             break;
-        case FASTER:
+        case FAST:
             if (timer_elapsed32(mouse_wheel_acceleration_timer) > 5000) {
-                unregister_code16(MS_ACL1);
-                mouse_wheel_acceleration_mode = DEFAULT;
-            }
-            break;
-        case FASTEST:
-            if (timer_elapsed32(mouse_wheel_acceleration_timer) > 5000) {
-                unregister_code16(MS_ACL2);
+                unregister_code16(QK_MOUSE_ACCELERATION_2);
                 mouse_wheel_acceleration_mode = DEFAULT;
             }
             break;
@@ -421,8 +421,8 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
   [_NUMBER] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
   [_SYMBOL] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
   [_FUNCTION] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
-  [_NAVIGATION] = { ENCODER_CCW_CW(MS_WHLU_FASTER, MS_WHLD_FASTER), },
-  [_MOUSE] = { ENCODER_CCW_CW(MS_WHLU_FASTEST, MS_WHLD_FASTEST), },
-  [_RGB] = { ENCODER_CCW_CW(MS_WHLU_SLOW, MS_WHLD_SLOW), },
+  [_NAVIGATION] = { ENCODER_CCW_CW(MS_WHLU_SLOW, MS_WHLD_SLOW), },
+  [_MOUSE] = { ENCODER_CCW_CW(MS_WHLU_FAST, MS_WHLD_FAST), },
+  [_RGB] = { ENCODER_CCW_CW(MS_WHLU_SLOWEST, MS_WHLD_SLOWEST), },
 };
 #endif
