@@ -19,7 +19,13 @@ enum custom_keycodes {
     MACRO_2,
     MACRO_3,
     MACRO_4,
-    MACRO_5
+    MACRO_5,
+    MS_WHLD_SLOW,
+    MS_WHLD_FASTER,
+    MS_WHLD_FASTEST,
+    MS_WHLU_SLOW,
+    MS_WHLU_FASTER,
+    MS_WHLU_FASTEST    
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -73,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_NAVIGATION] = LAYOUT_split_3x6_3_ex2(                                  // Navigation Layer (with macros)
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------+-----------|
-        MACRO_4,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    DM_REC1,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    DM_REC1,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------+-----------|
         XXXXXXX,    KC_LEFT,    KC_UP,      KC_DOWN,    KC_RGHT,    XXXXXXX,    DM_PLY1,        XXXXXXX,    XXXXXXX,    KC_RCTL,    KC_RSFT,    KC_RALT,    KC_RGUI,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
@@ -97,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_RGB] = LAYOUT_split_3x6_3(                                           // RGB Layer
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
-        MACRO_5,    DT_PRNT,    DT_UP,      DT_DOWN,    XXXXXXX,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
+        XXXXXXX,    DT_PRNT,    DT_UP,      DT_DOWN,    XXXXXXX,    XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
         RM_TOGG,    RM_NEXT,    RM_HUEU,    RM_SATU,    RM_VALU,    RM_SPDU,        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
@@ -216,7 +222,83 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
 
+        // For the Rotary Encoder:
+        // Mouse Wheel Down: Slow, Faster, Fastest.
+       case MS_WHLD_SLOW:
+            if (record->event.pressed) {
+                register_code16(MS_ACL0); 
+                tap_code16(MS_WHLD);
+                unregister_code16(MS_ACL0);
+            } else {
+                // when keycode is released
+            }
+            break;
+
+       case MS_WHLD_FASTER:
+            if (record->event.pressed) {
+                register_code16(MS_ACL1); 
+                tap_code16(MS_WHLD);
+                unregister_code16(MS_ACL1);
+            } else {
+                // when keycode is released
+            }
+            break;
+
+        case MS_WHLD_FASTEST:
+            if (record->event.pressed) {
+                register_code16(MS_ACL2); 
+                tap_code16(MS_WHLD);
+                unregister_code16(MS_ACL2);
+            } else {
+                // when keycode is released
+            }
+            break;
+
+        // For the Rotary Encoder:
+        // Mouse Wheel Up: Slow, Faster, Fastest.
+        case MS_WHLU_SLOW:
+            if (record->event.pressed) {
+                register_code16(MS_ACL0); 
+                tap_code16(MS_WHLU);
+                unregister_code16(MS_ACL0);
+            } else {
+                // when keycode is released
+            }
+            break;
+
+       case MS_WHLU_FASTER:
+            if (record->event.pressed) {
+                register_code16(MS_ACL1); 
+                tap_code16(MS_WHLU);
+                unregister_code16(MS_ACL1);
+            } else {
+                // when keycode is released
+            }
+            break;
+
+        case MS_WHLU_FASTEST:
+            if (record->event.pressed) {
+                register_code16(MS_ACL2); 
+                tap_code16(MS_WHLU);
+                unregister_code16(MS_ACL2);
+            } else {
+                // when keycode is released
+            }
+            break;
+
     }
 
     return true;
 }
+
+#ifdef ENCODER_MAP_ENABLE
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
+  [_COLEMAK_DH] = { ENCODER_CCW_CW(MS_WHLD, MS_WHLU), },
+  [_NUMBER] = { ENCODER_CCW_CW(MS_WHLD, MS_WHLU), },
+  [_SYMBOL] = { ENCODER_CCW_CW(MS_WHLD, MS_WHLU), },
+  [_FUNCTION] = { ENCODER_CCW_CW(MS_WHLD, MS_WHLU), },
+  [_NAVIGATION] = { ENCODER_CCW_CW(MS_WHLD_FASTER, MS_WHLU_FASTER), },
+  [_MOUSE] = { ENCODER_CCW_CW(MS_WHLD_FASTEST, MS_WHLU_FASTEST), },
+  [_RGB] = { ENCODER_CCW_CW(MS_WHLD_SLOW, MS_WHLU_SLOW), },
+};
+#endif
