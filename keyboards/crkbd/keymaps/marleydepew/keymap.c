@@ -25,7 +25,10 @@ enum custom_keycodes {
     MS_WHLD_FAST,
     MS_WHLU_SLOWEST,
     MS_WHLU_SLOW,
-    MS_WHLU_FAST    
+    MS_WHLU_FAST,
+    DRINK_WATER,
+    PRINT_WATER,
+    TOGG_WATER    
 };
 
 enum mouse_wheel_acceleration {
@@ -38,10 +41,13 @@ enum mouse_wheel_acceleration {
 uint8_t mouse_wheel_acceleration_mode = DEFAULT;
 uint32_t mouse_wheel_acceleration_timer = 0; 
 
+uint32_t water_reminder_timer = 0;
+uint8_t water_consumed_oz = 0;
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAK_DH] = LAYOUT_split_3x6_3_ex2(                                                        // Colemak DH Layer
     // |-------------+-------------+-------------+-------------+-------------+-------------+-------------|   |-------------+-------------+-------------+-------------+-------------+-------------+-------------|
-        MACRO_1,      KC_Q,         KC_W,         KC_F,         KC_P,         KC_B,         MACRO_1,          MACRO_3,      KC_J,         KC_L,         KC_U,         KC_Y,         XXXXXXX,      MACRO_2,
+        MACRO_1,      KC_Q,         KC_W,         KC_F,         KC_P,         KC_B,         MACRO_1,          MACRO_3,      KC_J,         KC_L,         KC_U,         KC_Y,         DRINK_WATER,  MACRO_2,
     // |-------------+-------------+-------------+-------------+-------------+-------------+-------------|   |-------------+-------------+-------------+-------------+-------------+-------------+-------------|
         KC_CAPS,      LGUI_T(KC_A), LALT_T(KC_R), LSFT_T(KC_S), LCTL_T(KC_T), KC_G,         MACRO_2,          MACRO_4,      KC_M,         LCTL_T(KC_N), LSFT_T(KC_E), LALT_T(KC_I), LGUI_T(KC_O), KC_QUOT,
     // |-------------+-------------+-------------+-------------+-------------+-------------+-------------|   |-------------+-------------+-------------+-------------+-------------+-------------+-------------|
@@ -53,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_NUMBER] = LAYOUT_split_3x6_3(                                      // Number Layer
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
-        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,        XXXXXXX,    KC_1,       KC_2,       KC_3,       XXXXXXX,    XXXXXXX,
+        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,        XXXXXXX,    KC_1,       KC_2,       KC_3,       PRINT_WATER,XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
         XXXXXXX,    KC_LGUI,    KC_LALT,    KC_LSFT,    KC_LCTL,    XXXXXXX,        KC_MINS,    KC_4,       KC_5,       KC_6,       KC_COLN,    KC_GRV,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
@@ -65,7 +71,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_SYMBOL] = LAYOUT_split_3x6_3(                                      // Symbols Layer
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
-        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,        XXXXXXX,    KC_EXLM,    KC_AT,      KC_HASH,    XXXXXXX,    XXXXXXX,
+        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,        XXXXXXX,    KC_EXLM,    KC_AT,      KC_HASH,    TOGG_WATER, XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
         XXXXXXX,    KC_LGUI,    KC_LALT,    KC_LSFT,    KC_LCTL,    XXXXXXX,        KC_PLUS,    KC_DLR,     KC_PERC,    KC_CIRC,    KC_SCLN,    KC_TILD,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
@@ -221,6 +227,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     "net start audiosrv" SS_TAP(X_ENT) SS_DELAY(2000)
                     "net start TPHKLOAD" SS_TAP(X_ENT) SS_DELAY(2000)
                 );
+            }
+            break;
+
+        case DRINK_WATER:
+            if (record->event.pressed) {
+                water_consumed_oz += 4;
+                water_reminder_timer = timer_read32();
+            }
+            break;
+
+        case PRINT_WATER:
+            if (record->event.pressed) {
+                SEND_STRING("So far, I had ");
+                send_string(get_u8_str(water_consumed_oz, ' '));
+                SEND_STRING("OZ of water.");
+            }
+            break;
+
+        case TOGG_WATER:
+            if (record->event.pressed) {
+                // If the timer is 0, its not tracking the water intake.
+                if (water_reminder_timer == 0) {
+                    water_reminder_timer = timer_read32();
+                } else {
+                    water_reminder_timer = 0;
+                }
             }
             break;
 
@@ -426,3 +458,54 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
   [_RGB] = { ENCODER_CCW_CW(MS_WHLU_SLOWEST, MS_WHLD_SLOWEST), },
 };
 #endif
+
+bool rgb_matrix_indicators_user(void) {
+
+    if (water_reminder_timer == 0) return true;
+
+    // After 33 minutes stat flashing every 0.1 seconds
+    if (timer_elapsed32(water_reminder_timer) > 33 * 60 * 1000) {
+        if (timer_elapsed32(water_reminder_timer) / 100 % 2 < 1) {
+            rgb_matrix_set_color_all(RGB_AZURE);
+            return false;
+        } else {
+            rgb_matrix_set_color_all(RGB_TEAL);
+            return false;
+        }
+    }
+
+    // After 32 minutes stat flashing every 0.5 seconds
+    if (timer_elapsed32(water_reminder_timer) > 32 * 60 * 1000) {
+        if (timer_elapsed32(water_reminder_timer) / 100 % 10 < 5) {
+            rgb_matrix_set_color_all(RGB_AZURE);
+            return false;
+        } else {
+            rgb_matrix_set_color_all(RGB_TEAL);
+            return false;
+        }
+    }
+
+    // After 31 minutes stat flashing every 2 seconds
+    if (timer_elapsed32(water_reminder_timer) > 31 * 60 * 1000) {
+        if (timer_elapsed32(water_reminder_timer) / 1000 % 4 < 2) {
+            rgb_matrix_set_color_all(RGB_AZURE);
+            return false;
+        } else {
+            rgb_matrix_set_color_all(RGB_TEAL);
+            return false;
+        }
+    }
+
+    // After 30 minutes stat flashing every 5 seconds
+    if (timer_elapsed32(water_reminder_timer) > 30 * 60 * 1000) {
+        if (timer_elapsed32(water_reminder_timer) / 1000 % 10 < 5) {
+            rgb_matrix_set_color_all(RGB_AZURE);
+            return false;
+        } else {
+            rgb_matrix_set_color_all(RGB_TEAL);
+            return false;
+        }
+    }
+
+    return true;
+}
