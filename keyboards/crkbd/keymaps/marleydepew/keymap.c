@@ -28,21 +28,32 @@ enum custom_keycodes {
     MS_WHLU_FAST,
     DRINK_WATER,
     PRINT_WATER,
-    TOGG_WATER    
+    TOGG_WATER,
+    RESET_WATER
 };
 
-enum mouse_wheel_acceleration {
-    DEFAULT = 10,
-    SLOWEST = 0,
-    SLOW = 1,
-    FAST = 2
+uint32_t scroll_encoder_timer = 0;
+int8_t   scroll_encoder_mode  = 0;
+enum  scroll_encoder_modes {
+    DOWN_FAST = -4,
+    DOWN_UNMOD = -3,
+    DOWN_SLOW = -2,
+    DOWN_SLOWEST = -1,
+    STILL = 0,
+    UP_SLOWEST = 1,
+    UP_SLOW = 2,
+    UP_UNMOD = 3,
+    UP_FAST = 4
 };
-
-uint8_t mouse_wheel_acceleration_mode = DEFAULT;
-uint32_t mouse_wheel_acceleration_timer = 0; 
 
 uint32_t water_reminder_timer = 0;
+#define WATER_REMINDER_0_MS 15 * 60 * 1000 // 15 minutes
+#define WATER_REMINDER_1_MS 16 * 60 * 1000 // 16 minutes
+#define WATER_REMINDER_2_MS 17 * 60 * 1000 // 17 minutes
+#define WATER_REMINDER_3_MS 18 * 60 * 1000 // 18 minutes
+
 uint8_t water_consumed_oz = 0;
+#define DRINK_AMOUNT_OZ 4
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAK_DH] = LAYOUT_split_3x6_3_ex2(                                                        // Colemak DH Layer
@@ -83,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_FUNCTION] = LAYOUT_split_3x6_3(                                   // Function Layer
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
-        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,        XXXXXXX,    KC_F1,      KC_F2,      KC_F3,      XXXXXXX,    XXXXXXX,
+        XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,        XXXXXXX,    KC_F1,      KC_F2,      KC_F3,      RESET_WATER, XXXXXXX,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
         XXXXXXX,    KC_LGUI,    KC_LALT,    KC_LSFT,    KC_LCTL,    XXXXXXX,        XXXXXXX,    KC_F4,      KC_F5,      KC_F6,      KC_APP,     KC_PIPE,
     // |-----------+-----------+-----------+-----------+-----------+-----------|   |-----------+-----------+-----------+-----------+-----------+-----------|
@@ -215,21 +226,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
 
-        case MACRO_5:
-            if (record->event.pressed) {
-                SEND_STRING(
-                    SS_RGUI("x") SS_DELAY(1000) "a" SS_DELAY(1000) 
-                    // SS_TAP(X_LEFT) SS_DELAY(2000) SS_TAP(X_ENT) SS_DELAY(2000)
-                    "net stop TPHKLOAD" SS_TAP(X_ENT) SS_DELAY(2000)
-                    "net stop audiosrv" SS_TAP(X_ENT) SS_DELAY(2000)
-                    "net stop AudioEndpointBuilder" SS_TAP(X_ENT) SS_DELAY(2000)
-                    "net start AudioEndpointBuilder" SS_TAP(X_ENT) SS_DELAY(2000)
-                    "net start audiosrv" SS_TAP(X_ENT) SS_DELAY(2000)
-                    "net start TPHKLOAD" SS_TAP(X_ENT) SS_DELAY(2000)
-                );
-            }
-            break;
-
         case DRINK_WATER:
             if (record->event.pressed) {
                 water_consumed_oz += 4;
@@ -241,7 +237,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 SEND_STRING("So far, I had ");
                 send_string(get_u8_str(water_consumed_oz, ' '));
-                SEND_STRING("OZ of water.");
+                SEND_STRING(" oz of water.");
             }
             break;
 
@@ -256,195 +252,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
 
-        // For the Rotary Encoder
-        // Mouse Wheel Down SLOWEST Speed
-       case MS_WHLD_SLOWEST:
+        case RESET_WATER:
             if (record->event.pressed) {
-                switch (mouse_wheel_acceleration_mode) {
-                    case SLOWEST:
-                        break;
-                    case SLOW:
-                        mouse_wheel_acceleration_mode = SLOWEST;
-                        unregister_code16(QK_MOUSE_ACCELERATION_1);
-                        register_code16(QK_MOUSE_ACCELERATION_0);
-                        break;
-                    case FAST:
-                        mouse_wheel_acceleration_mode = SLOWEST;
-                        unregister_code16(QK_MOUSE_ACCELERATION_2);
-                        register_code16(QK_MOUSE_ACCELERATION_0);
-                        break;
-                    case DEFAULT:
-                        mouse_wheel_acceleration_mode = SLOWEST;
-                        register_code16(QK_MOUSE_ACCELERATION_0);
-                        break;
-                }
-                mouse_wheel_acceleration_timer = timer_read32();
-                tap_code16(MS_WHLD);
+                water_consumed_oz = 0;
+                SEND_STRING("So far, I had 0 oz of water.");
             }
             break;
-
-        // For the Rotary Encoder
-        // Mouse Wheel Down SLOW Speed
-       case MS_WHLD_SLOW:
-            if (record->event.pressed) {
-                switch (mouse_wheel_acceleration_mode) {
-                    case SLOWEST:
-                        mouse_wheel_acceleration_mode = SLOW;
-                        unregister_code16(QK_MOUSE_ACCELERATION_0);
-                        register_code16(QK_MOUSE_ACCELERATION_1);
-                        break;
-                    case SLOW:
-                        break;
-                    case FAST:
-                        mouse_wheel_acceleration_mode = SLOW;
-                        unregister_code16(QK_MOUSE_ACCELERATION_2);
-                        register_code16(QK_MOUSE_ACCELERATION_1);
-                        break;
-                    case DEFAULT:
-                        mouse_wheel_acceleration_mode = SLOW;
-                        register_code16(QK_MOUSE_ACCELERATION_1);
-                        break;
-                }
-                mouse_wheel_acceleration_timer = timer_read32();
-                tap_code16(MS_WHLD);
-            }
-            break;
-
-        // For the Rotary Encoder
-        // Mouse Wheel Down FAST Speed
-        case MS_WHLD_FAST:
-            if (record->event.pressed) {
-                switch (mouse_wheel_acceleration_mode) {
-                    case SLOWEST:
-                        mouse_wheel_acceleration_mode = FAST;
-                        unregister_code16(QK_MOUSE_ACCELERATION_0);
-                        register_code16(QK_MOUSE_ACCELERATION_2);
-                        break;
-                    case SLOW:
-                        mouse_wheel_acceleration_mode = FAST;
-                        unregister_code16(QK_MOUSE_ACCELERATION_1);
-                        register_code16(QK_MOUSE_ACCELERATION_2);
-                        break;
-                    case FAST:
-                        break;
-                    case DEFAULT:
-                        mouse_wheel_acceleration_mode = FAST;
-                        register_code16(QK_MOUSE_ACCELERATION_2);
-                        break;
-                }
-                mouse_wheel_acceleration_timer = timer_read32();
-                tap_code16(MS_WHLD);
-            }
-            break;
-
-        // For the Rotary Encoder
-        // Mouse Wheel Up SLOWEST Speed
-        case MS_WHLU_SLOWEST:
-            if (record->event.pressed) {
-                switch (mouse_wheel_acceleration_mode) {
-                    case SLOWEST:
-                        break;
-                    case SLOW:
-                        mouse_wheel_acceleration_mode = SLOWEST;
-                        unregister_code16(QK_MOUSE_ACCELERATION_1);
-                        register_code16(QK_MOUSE_ACCELERATION_0);
-                        break;
-                    case FAST:
-                        mouse_wheel_acceleration_mode = SLOWEST;
-                        unregister_code16(QK_MOUSE_ACCELERATION_2);
-                        register_code16(QK_MOUSE_ACCELERATION_0);
-                        break;
-                    case DEFAULT:
-                        mouse_wheel_acceleration_mode = SLOWEST;
-                        register_code16(QK_MOUSE_ACCELERATION_0);
-                        break;
-                }
-                mouse_wheel_acceleration_timer = timer_read32();
-                tap_code16(MS_WHLU);
-            }
-            break;
-
-        // For the Rotary Encoder
-        // Mouse Wheel Up SLOW Speed
-       case MS_WHLU_SLOW:
-            if (record->event.pressed) {
-                switch (mouse_wheel_acceleration_mode) {
-                    case SLOWEST:
-                        mouse_wheel_acceleration_mode = SLOW;
-                        unregister_code16(QK_MOUSE_ACCELERATION_0);
-                        register_code16(QK_MOUSE_ACCELERATION_1);
-                        break;
-                    case SLOW:
-                        break;
-                    case FAST:
-                        mouse_wheel_acceleration_mode = SLOW;
-                        unregister_code16(QK_MOUSE_ACCELERATION_2);
-                        register_code16(QK_MOUSE_ACCELERATION_1);
-                        break;
-                    case DEFAULT:
-                        mouse_wheel_acceleration_mode = SLOW;
-                        register_code16(QK_MOUSE_ACCELERATION_1);
-                        break;
-                }
-                mouse_wheel_acceleration_timer = timer_read32();
-                tap_code16(MS_WHLU);
-            }
-            break;
-
-        // For the Rotary Encoder
-        // Mouse Wheel Up FAST Speed
-        case MS_WHLU_FAST:
-            if (record->event.pressed) {
-                switch (mouse_wheel_acceleration_mode) {
-                    case SLOWEST:
-                        mouse_wheel_acceleration_mode = FAST;
-                        unregister_code16(QK_MOUSE_ACCELERATION_0);
-                        register_code16(QK_MOUSE_ACCELERATION_2);
-                        break;
-                    case SLOW:
-                        mouse_wheel_acceleration_mode = FAST;
-                        unregister_code16(QK_MOUSE_ACCELERATION_1);
-                        register_code16(QK_MOUSE_ACCELERATION_2);
-                        break;
-                    case FAST:
-                        break;
-                    case DEFAULT:
-                        mouse_wheel_acceleration_mode = FAST;
-                        register_code16(QK_MOUSE_ACCELERATION_2);
-                        break;
-                }
-                mouse_wheel_acceleration_timer = timer_read32();
-                tap_code16(MS_WHLU);
-            }
-            break;
-
     }
-
     return true;
-}
-
-// This gets called constantly
-void matrix_scan_user(void) { 
-    switch (mouse_wheel_acceleration_mode) {
-        case SLOWEST:
-            if (timer_elapsed32(mouse_wheel_acceleration_timer) > 5000) {
-                unregister_code16(QK_MOUSE_ACCELERATION_0);
-                mouse_wheel_acceleration_mode = DEFAULT;
-            }
-            break;
-        case SLOW:
-            if (timer_elapsed32(mouse_wheel_acceleration_timer) > 5000) {
-                unregister_code16(QK_MOUSE_ACCELERATION_1);
-                mouse_wheel_acceleration_mode = DEFAULT;
-            }
-            break;
-        case FAST:
-            if (timer_elapsed32(mouse_wheel_acceleration_timer) > 5000) {
-                unregister_code16(QK_MOUSE_ACCELERATION_2);
-                mouse_wheel_acceleration_mode = DEFAULT;
-            }
-            break;
-    }
 }
 
 #ifdef ENCODER_MAP_ENABLE
@@ -453,58 +268,53 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
   [_NUMBER] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
   [_SYMBOL] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
   [_FUNCTION] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
-  [_NAVIGATION] = { ENCODER_CCW_CW(MS_WHLU_SLOW, MS_WHLD_SLOW), },
-  [_MOUSE] = { ENCODER_CCW_CW(MS_WHLU_FAST, MS_WHLD_FAST), },
-  [_RGB] = { ENCODER_CCW_CW(MS_WHLU_SLOWEST, MS_WHLD_SLOWEST), },
+  [_NAVIGATION] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
+  [_MOUSE] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
+  [_RGB] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
 };
 #endif
+
+// This function alternates the keyboard between the current hue, 
+// and an offset hue determined by the RGB Matrix Speed setting. 
+// The flashing period is determined by the provided period in milliseconds.
+void alternate_colors(uint16_t period_ms) {
+
+    hsv_t hsv = rgb_matrix_get_hsv();
+
+    // Increase the hue for the first half of the period.
+    if (timer_elapsed32(water_reminder_timer) % period_ms < period_ms / 2) {
+    
+        // The degree of the change is determined by the RGB Matrix Speed setting.
+        // The hsv hue value is between 0 and 255, so we use modulo to wrap around if it goes over 255.
+        hsv.h += rgb_matrix_get_speed() % 255;
+    }
+    
+    rgb_t rgb = hsv_to_rgb(hsv);
+    rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
+}
 
 bool rgb_matrix_indicators_user(void) {
 
     if (water_reminder_timer == 0) return true;
 
-    // After 33 minutes stat flashing every 0.1 seconds
-    if (timer_elapsed32(water_reminder_timer) > 33 * 60 * 1000) {
-        if (timer_elapsed32(water_reminder_timer) / 100 % 2 < 1) {
-            rgb_matrix_set_color_all(RGB_BLUE);
-            return false;
-        } else {
-            rgb_matrix_set_color_all(RGB_TEAL);
-            return false;
-        }
+    if (timer_elapsed32(water_reminder_timer) > WATER_REMINDER_3_MS) {
+        alternate_colors(200);
+        return false;
     }
 
-    // After 32 minutes stat flashing every 0.5 seconds
-    if (timer_elapsed32(water_reminder_timer) > 32 * 60 * 1000) {
-        if (timer_elapsed32(water_reminder_timer) / 100 % 10 < 5) {
-            rgb_matrix_set_color_all(RGB_BLUE);
-            return false;
-        } else {
-            rgb_matrix_set_color_all(RGB_TEAL);
-            return false;
-        }
+    if (timer_elapsed32(water_reminder_timer) > WATER_REMINDER_2_MS) {
+        alternate_colors(1000);
+        return false;
     }
 
-    // After 31 minutes stat flashing every 2 seconds
-    if (timer_elapsed32(water_reminder_timer) > 31 * 60 * 1000) {
-        if (timer_elapsed32(water_reminder_timer) / 1000 % 4 < 2) {
-            rgb_matrix_set_color_all(RGB_BLUE);
-            return false;
-        } else {
-            rgb_matrix_set_color_all(RGB_TEAL);
-            return false;
-        }
+    if (timer_elapsed32(water_reminder_timer) > WATER_REMINDER_1_MS) {
+        alternate_colors(4000);
+        return false;
     }
 
-    // After 30 minutes stat flashing every 5 seconds
-    if (timer_elapsed32(water_reminder_timer) > 30 * 60 * 1000) {
-        if (timer_elapsed32(water_reminder_timer) / 1000 % 10 < 5) {
-            rgb_matrix_set_color_all(RGB_BLUE);
-            return false;
-        } else {
-            rgb_matrix_set_color_all(RGB_TEAL);
-            return false;
-        }
+    if (timer_elapsed32(water_reminder_timer) > WATER_REMINDER_0_MS) {
+        alternate_colors(10000);
+        return false;
     }
 
     return true;
