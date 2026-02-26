@@ -449,13 +449,13 @@ void matrix_scan_user(void) {
 
 #ifdef ENCODER_MAP_ENABLE
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-  [_COLEMAK_DH] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
-  [_NUMBER] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
-  [_SYMBOL] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
-  [_FUNCTION] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
-  [_NAVIGATION] = { ENCODER_CCW_CW(MS_WHLU_SLOW, MS_WHLD_SLOW), },
-  [_MOUSE] = { ENCODER_CCW_CW(MS_WHLU_FAST, MS_WHLD_FAST), },
-  [_RGB] = { ENCODER_CCW_CW(MS_WHLU_SLOWEST, MS_WHLD_SLOWEST), },
+  [_COLEMAK_DH] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
+  [_NUMBER] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
+  [_SYMBOL] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
+  [_FUNCTION] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), ENCODER_CCW_CW(MS_WHLU, MS_WHLD), },
+  [_NAVIGATION] = { ENCODER_CCW_CW(MS_WHLU_SLOW, MS_WHLD_SLOW), ENCODER_CCW_CW(MS_WHLU_SLOW, MS_WHLD_SLOW), ENCODER_CCW_CW(MS_WHLU_SLOW, MS_WHLD_SLOW), ENCODER_CCW_CW(MS_WHLU_SLOW, MS_WHLD_SLOW), },
+  [_MOUSE] = { ENCODER_CCW_CW(MS_WHLU_FAST, MS_WHLD_FAST), ENCODER_CCW_CW(MS_WHLU_FAST, MS_WHLD_FAST), ENCODER_CCW_CW(MS_WHLU_FAST, MS_WHLD_FAST), ENCODER_CCW_CW(MS_WHLU_FAST, MS_WHLD_FAST), },
+  [_RGB] = { ENCODER_CCW_CW(MS_WHLU_SLOWEST, MS_WHLD_SLOWEST), ENCODER_CCW_CW(MS_WHLU_SLOWEST, MS_WHLD_SLOWEST), ENCODER_CCW_CW(MS_WHLU_SLOWEST, MS_WHLD_SLOWEST), ENCODER_CCW_CW(MS_WHLU_SLOWEST, MS_WHLD_SLOWEST), },
 };
 #endif
 
@@ -466,7 +466,7 @@ bool rgb_matrix_indicators_user(void) {
     // After 33 minutes stat flashing every 0.1 seconds
     if (timer_elapsed32(water_reminder_timer) > 33 * 60 * 1000) {
         if (timer_elapsed32(water_reminder_timer) / 100 % 2 < 1) {
-            rgb_matrix_set_color_all(RGB_AZURE);
+            rgb_matrix_set_color_all(RGB_BLUE);
             return false;
         } else {
             rgb_matrix_set_color_all(RGB_TEAL);
@@ -477,7 +477,7 @@ bool rgb_matrix_indicators_user(void) {
     // After 32 minutes stat flashing every 0.5 seconds
     if (timer_elapsed32(water_reminder_timer) > 32 * 60 * 1000) {
         if (timer_elapsed32(water_reminder_timer) / 100 % 10 < 5) {
-            rgb_matrix_set_color_all(RGB_AZURE);
+            rgb_matrix_set_color_all(RGB_BLUE);
             return false;
         } else {
             rgb_matrix_set_color_all(RGB_TEAL);
@@ -488,7 +488,7 @@ bool rgb_matrix_indicators_user(void) {
     // After 31 minutes stat flashing every 2 seconds
     if (timer_elapsed32(water_reminder_timer) > 31 * 60 * 1000) {
         if (timer_elapsed32(water_reminder_timer) / 1000 % 4 < 2) {
-            rgb_matrix_set_color_all(RGB_AZURE);
+            rgb_matrix_set_color_all(RGB_BLUE);
             return false;
         } else {
             rgb_matrix_set_color_all(RGB_TEAL);
@@ -499,7 +499,7 @@ bool rgb_matrix_indicators_user(void) {
     // After 30 minutes stat flashing every 5 seconds
     if (timer_elapsed32(water_reminder_timer) > 30 * 60 * 1000) {
         if (timer_elapsed32(water_reminder_timer) / 1000 % 10 < 5) {
-            rgb_matrix_set_color_all(RGB_AZURE);
+            rgb_matrix_set_color_all(RGB_BLUE);
             return false;
         } else {
             rgb_matrix_set_color_all(RGB_TEAL);
