@@ -285,8 +285,10 @@ void alternate_colors(uint16_t period_ms) {
     if (timer_elapsed32(water_reminder_timer) % period_ms < period_ms / 2) {
     
         // The degree of the change is determined by the RGB Matrix Speed setting.
+        // To align with the RGB Matrix Vertical Gradient effect, it's scaled to 3/4.
         // The hsv hue value is between 0 and 255, so we use modulo to wrap around if it goes over 255.
-        hsv.h += rgb_matrix_get_speed() % 255;
+        hsv.h += rgb_matrix_get_speed() * 3/4;
+        hsv.h %= 255;
     }
     
     rgb_t rgb = hsv_to_rgb(hsv);
